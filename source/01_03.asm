@@ -105,9 +105,6 @@ clear_screen:
         ret 
 
 desenho_00:
- 
-
-
         db %00000000, %00000000
         db %00000000, %00000000
         db %00011111, %11111100
@@ -125,9 +122,7 @@ desenho_00:
         db %01111111, %11110110
         db %00011110, %01110000
         db %00011100, %01111000
-
-
-
+ 
 desenho_01:
         db %00000000, %00011110
         db %00011111, %11111110
@@ -210,46 +205,28 @@ desenho_04:
 
 
 
+
+; b: line from top
+; c: byte from left
 draw:
 
+        ld a, b
+        add 17
+        ld(op_01+1), a
 
-        
- 
+        ld a, c
+        ld(op_03+1), a
+        add 2
+        ld(op_00+1), a
 
-        ld b, 95
         _do
-                ld c, 7
+op_03:          
+                ld c, 1
         
                 _do
 
-
-                        ld hl, row_memory
-
-                        ld a, l
-                        add b
-                        _if_not NC
-                                inc h
-                        _end_if
-                        add b
-
-                        _if_not NC
-                                inc h
-                        _end_if
-                        ld l, a
-
-
-                        push bc
-                        ld c,(hl)
-                        inc hl
-                        ld b,(hl)
-                        ld l,c
-                        ld h,b	
-                        pop bc
- 
-
-                        ld a, l
-                        add c
-                        ld l, a
+                        call getPixelAddress
+                       
 
 
                         ld a, (de)
@@ -258,11 +235,13 @@ draw:
                         
                         inc c
                         ld a, c
-                        cp 2+7
+op_00:                        
+                        cp 0
                 _while nz
                 inc b
                 ld a, b
-                cp 17+95
+op_01:                        
+                cp  0
         _while nz
 
 
@@ -278,37 +257,7 @@ loop_counter:
         db $00 
  
 
-
-
-; Get screen address
-;  b = Y pixel position
-; Returns address in HL
-;
-Get_Pixel_Address:      
-        ld d, b
-        ld a,d          ; calculate y2,y1,y0
-        and %00000111   ; mask out unwanted bits
-        or %01000000    ; set base address of screen
-        ld h,a          ; store in h
-        ld a,d          ; calculate y7,y6
-        rra             ; shift to position
-        rra
-        rra
-        and %00011000   ; mask out unwanted bits
-        or h            ; or with y2,y1,y0
-        ld h,a          ; store in h
-        ld a,d          ; calculate y5,y4,y3
-        rla             ; shift to position
-        rla
-        and %11100000   ; mask out unwanted bits
-        ld l,a          ; store in l
- 
-
- 
- 
-
- 
-        ret
+        include './lib.asm'
 
 
 interrupt_handler: 
@@ -351,12 +300,14 @@ interrupt_handler:
                 _if_not nz
 
                         ;call clear_screen
+                        ld bc, $5f08
                         ld de, desenho_00 
                         call draw
                 _else
                         cp 20
                         _if_not nz
                                 ;call clear_screen
+                                ld bc, $5f09
                                 ld de, desenho_01 
                                 call draw
 
@@ -365,12 +316,14 @@ interrupt_handler:
                                 _if_not nz
                                 
                                         ;call clear_screen
+                                        ld bc, $5f0a
                                         ld de, desenho_00 
                                         call draw
                                 _else
                                         cp 0
                                         _if_not nz
                                                 ;call clear_screen
+                                                ld bc, $5f07
                                                 ld de, desenho_02 
                                                 call draw
 
