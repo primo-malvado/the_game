@@ -73,6 +73,119 @@ start:
 
 
 
+        ld a, (game_started)
+        cp 1
+        _if_not nz
+        
+                halt
+
+                
+                ld a, (loop_counter)
+                inc a
+                
+                cp 40
+                _if_not nz
+                        xor a
+                _end_if
+                ld (loop_counter), a
+
+
+
+
+                cp 10
+                
+                _if_not nz
+                         
+                        ;call clear_screen
+                        ld bc, $5f08
+                        ld de, desenho_00 
+                        call drawBoneco
+                _else
+                        cp 20
+                        _if_not nz
+                         
+                                ;call clear_screen
+                                ld bc, $5f09
+                                ld de, desenho_01 
+                                call drawBoneco
+
+                        _else
+                                cp 30
+                                _if_not nz
+                                 
+                                        ;call clear_screen
+                                        ld bc, $5f0a
+                                        ld de, desenho_00 
+                                        call drawBoneco
+                                _else
+                                        cp 0
+                                        _if_not nz
+                                        
+                                                ;call clear_screen
+                                                ld bc, $5f07
+                                                ld de, desenho_02 
+                                                call drawBoneco
+
+                                        _end_if
+                                _end_if
+                        _end_if
+                _end_if
+
+        _else
+
+
+ 
+
+                        ld a, $7f
+                        in a, ($fe)
+        
+                        bit 0, a
+                        _if_not nz
+                                ld a, 1
+                                ld (game_started), a
+
+                                halt
+                                call clear_screen
+
+
+ 
+                                ld b, 0
+                                _do 
+
+                                        ld c, 0
+                                        _do
+
+
+                                                ld de, desenho_04 
+                                                call draw16x16
+
+
+                                                inc c
+                                                inc c
+
+                                                ld a, c
+                                                cp 32
+
+                                         _while nz
+
+                                        ld a, b
+                                        add 16
+
+                                        ld b, a
+                                        cp 192
+
+                                _while nz
+
+
+
+
+                        _end_if
+ 
+
+
+        _end_if
+
+
 
         _while_true
 
@@ -115,63 +228,7 @@ walk:
         dw desenho_00
         dw desenho_02
  
-desenho_00:
-    db %00000000, %00000000, %00000000, %00000000
-    db %00011111, %00000000, %11111100, %00000000
-    db %00111111, %00011111, %11111110, %11111100
-    db %01111111, %00111111, %11111111, %11111110
-    db %11111111, %01110000, %11111110, %00000000
-    db %11111111, %01111111, %11111110, %11111100
-    db %11111111, %01111001, %11111110, %11100100
-    db %11111111, %01111001, %11111111, %11100110
-    db %11111111, %01111001, %11111111, %11100110
-    db %11111111, %01111111, %11111111, %00111110
-    db %11111111, %01111111, %11111111, %11111110
-    db %01111111, %00111111, %11111110, %11111100
-    db %01111111, %00000000, %11111110, %00000000
-    db %11111111, %01101111, %11111111, %11110110
-    db %11111111, %01111111, %11111111, %11110110
-    db %01111111, %00011110, %11111110, %01110000
-    db %00111110, %00011100, %11111110, %01111000
-desenho_01:
-    db %00011111, %00000000, %11111111, %00011110
-    db %00111111, %00011111, %11111111, %11111110
-    db %01111111, %00111111, %11111110, %11111100
-    db %11111111, %01110000, %11111100, %00000000
-    db %11111111, %01111111, %11111110, %11111100
-    db %11111111, %01111100, %11111110, %11110000
-    db %11111111, %01111100, %11111111, %11110010
-    db %11111111, %01111100, %11111111, %11110010
-    db %11111111, %01111111, %11111111, %10011110
-    db %11111111, %01111111, %11111111, %11111110
-    db %01111111, %00111111, %11111110, %11111100
-    db %11111111, %01100000, %11111100, %00000000
-    db %11111111, %01100111, %11111110, %11101100
-    db %01111111, %00011111, %11111110, %11111100
-    db %00111111, %00011111, %11111110, %11111100
-    db %00111111, %00011000, %11111100, %00000000
-    db %00011000, %00000000, %00000000, %00000000
-desenho_02:    
-    db %00011111, %00000000, %11111111, %00011110
-    db %00111111, %00011111, %11111111, %11111110
-    db %01111111, %00111111, %11111110, %11111100
-    db %11111111, %01110000, %11111100, %00000000
-    db %11111111, %01111111, %11111110, %11111100
-    db %11111111, %01110011, %11111110, %11001100
-    db %11111111, %01110011, %11111111, %11001110
-    db %11111111, %01110011, %11111111, %11001110
-    db %11111111, %01111110, %11111111, %01111110
-    db %11111111, %01111111, %11111111, %11111110
-    db %01111111, %00111111, %11111110, %11111100
-    db %01111111, %00110000, %11111111, %00000110
-    db %01111111, %00111111, %11111111, %11110110
-    db %00111111, %00001111, %11111110, %11110000
-    db %00011111, %00001111, %11111000, %01110000
-    db %00011111, %00001111, %11110000, %11100000
-    db %00001111, %00000000, %11100000, %00000000
-
-
- 
+        include "bonecos.asm"
 desenho_03:
         db %00000000, %00000000
         db %01111111, %11111110
@@ -263,46 +320,26 @@ op_01:
 ; b: line from top
 ; c: byte from left
 draw16x16:
-
- 
-        ld a, b
-        add 16
-        ld(op_05+1), a
-
-        ld a, c
-        ld(op_06+1), a
-        add 2
-        ld(op_04+1), a
+        push bc
+        call getPixelAddress
+        ld b,16
 
         _do
-op_06:          
-                ld c, 0
-        
-                _do
+                ld a, (de)
+                ld (hl), a 
+                inc de 
+                inc hl
 
-                        call getPixelAddress
-                       
+                ld a, (de)
+                ld (hl), a  
+                inc de   
 
-                        ld a, (de)
-                        ld (hl), a 
-                        inc de 
+                dec hl 
+                call nextLineDown
 
-                        
-                        inc c
-                        ld a, c
-op_04:                        
-                        cp 0
-                _while nz
-                inc b
-                ld a, b
-op_05:                        
-                cp  0
-        _while nz
-
-
- 
- 
-        ret                   ; Return from the function
+        _djnz
+        pop bc
+        ret
 
 
 game_started: 
@@ -329,111 +366,6 @@ interrupt_handler:
         ; PUSH HL
         ; PUSH IY
         
-
-        ld a, (game_started)
-        cp 1
-        _if_not nz
-        
-
-
-                
-                ld a, (loop_counter)
-                inc a
-                
-                cp 40
-                _if_not nz
-                        xor a
-                _end_if
-                ld (loop_counter), a
-
-
-
-
-                cp 10
-                
-                _if_not nz
-
-                        ;call clear_screen
-                        ld bc, $5f08
-                        ld de, desenho_00 
-                        call drawBoneco
-                _else
-                        cp 20
-                        _if_not nz
-                                ;call clear_screen
-                                ld bc, $5f09
-                                ld de, desenho_01 
-                                call drawBoneco
-
-                        _else
-                                cp 30
-                                _if_not nz
-                                
-                                        ;call clear_screen
-                                        ld bc, $5f0a
-                                        ld de, desenho_00 
-                                        call drawBoneco
-                                _else
-                                        cp 0
-                                        _if_not nz
-                                                ;call clear_screen
-                                                ld bc, $5f07
-                                                ld de, desenho_02 
-                                                call drawBoneco
-
-                                        _end_if
-                                _end_if
-                        _end_if
-                _end_if
-
-        _else
-
-
-                ;         ld a, (game_started)
-                ; bit 0, a
-                ; _if_not nz
-                        ; ei
-                        ; halt
-                        ; di
-
-                        ld a, $7f
-                        in a, ($fe)
-        
-                        bit 0, a
-                        _if_not nz
-                                ld a, 1
-                                ld (game_started), a
-
-                                
-                                call clear_screen
-                                ld bc, $0000
-                                ld de, desenho_04 
-                                call draw16x16
-
-                                ld bc, $1f0b
-                                ld de, desenho_04 
-                                call draw16x16
-
-
-                                ld bc, $2f0d
-                                ld de, desenho_04 
-                                call draw16x16
-
-                                ld bc, $3f0a
-                                ld de, desenho_03 
-                                call draw16x16
-
-
-
-
-                        _end_if
-                        ; ei
-                ; _end_if
-
-
-
-        _end_if
-
 
 
 
