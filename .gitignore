@@ -1,0 +1,6 @@
+dist/
+original/
+
+compare/*.asm
+compare/*.asm.hex
+bin
