@@ -34,6 +34,7 @@ rom_03_start:
 
 
 start:
+
         di
         ld sp, Stack_Top
 
@@ -66,7 +67,7 @@ start:
         ;call clear_screen
 
         call Initialise_Interrupt
- 
+        jp main
         
         _do
 
@@ -87,6 +88,7 @@ Initialise_Interrupt:
 
 
 clear_screen:
+        ret 
         xor a
         ld hl, screen_pixels
         ld de, screen_pixels +1 
@@ -205,15 +207,18 @@ desenho_04:
 
 
 
+
+
+
 draw:
 
 
         
  
 
-        ld b, 5
+        ld b, 95
         _do
-                ld c, 5
+                ld c, 7
         
                 _do
 
@@ -233,21 +238,14 @@ draw:
                         ld l, a
 
 
-
- 
-
-
-                        ld a, (hl)
-                        ld (temp_00), a
+                        push bc
+                        ld c,(hl)
                         inc hl
-                        ld a, (hl)
-                        ld (temp_00+1), a
-
-
-                        ld a, (temp_00)
-                        ld l, a
-                        ld a, (temp_00+1)
-                        ld h, a
+                        ld b,(hl)
+                        ld l,c
+                        ld h,b	
+                        pop bc
+ 
 
                         ld a, l
                         add c
@@ -260,11 +258,11 @@ draw:
                         
                         inc c
                         ld a, c
-                        cp 2+5
+                        cp 2+7
                 _while nz
                 inc b
                 ld a, b
-                cp 17+5
+                cp 17+95
         _while nz
 
 
@@ -278,9 +276,7 @@ game_started:
         db $00
 loop_counter:
         db $00 
-temp_00:
-        dw $0000
-
+ 
 
 
 
@@ -329,7 +325,7 @@ interrupt_handler:
         ; PUSH DE
         ; PUSH HL
         ; PUSH IY
- 
+        
 
         ld a, (game_started)
         cp 1
@@ -428,7 +424,7 @@ interrupt_handler:
         EI                                      ; Enable interrupts
         RET  
 
-
+        include '../source/sprite.asm'
 
 
         org $fdfd
