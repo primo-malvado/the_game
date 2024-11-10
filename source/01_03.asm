@@ -217,10 +217,10 @@ clear_screen:
         ret 
 
 last_boneco:
-        db $03
+        db $02
 boneco_pos:
-        db $00
-        db $00
+        db $5f
+        db $08
 
 walk: 
         dw desenho_00
@@ -271,12 +271,16 @@ desenho_04:
 
 
 
-
+last_boneco:
+        db $02
+boneco_pos:
+        db $5f
+        db $08
 
 ; b: line from top
 ; c: byte from left
 drawBoneco:
-
+        ld bc, (boneco_pos)
         ld a, b
         add 17
         ld(op_01+1), a
