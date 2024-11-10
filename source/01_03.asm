@@ -83,7 +83,7 @@ start:
                 ld a, (loop_counter)
                 inc a
                 
-                cp 40
+                cp 20
                 _if_not nz
                         xor a
                 _end_if
@@ -92,7 +92,7 @@ start:
 
 
 
-                cp 10
+                cp 5
                 
                 _if_not nz
                          
@@ -101,7 +101,7 @@ start:
                         ld de, desenho_00 
                         call drawBoneco
                 _else
-                        cp 20
+                        cp 10
                         _if_not nz
                          
                                 ;call clear_screen
@@ -110,7 +110,7 @@ start:
                                 call drawBoneco
 
                         _else
-                                cp 30
+                                cp 15
                                 _if_not nz
                                  
                                         ;call clear_screen
@@ -216,11 +216,8 @@ clear_screen:
         ldir
         ret 
 
-last_boneco:
-        db $02
-boneco_pos:
-        db $5f
-        db $08
+ 
+ 
 
 walk: 
         dw desenho_00
@@ -273,13 +270,65 @@ desenho_04:
 
 last_boneco:
         db $02
+last_boneco_pos:
+        db $00
+        db $00
 boneco_pos:
+        db $00
         db $5f
-        db $08
+
+
+
+clear_boneco
+        push de
+
+        ld bc, (last_boneco_pos)
+        ld de, desenho_mask
+        ld a, b
+        add 17
+        ld(op_05+1), a
+
+        ld a, c
+        ld(op_07+1), a
+        add 2
+        ld(op_06+1), a
+
+        _do
+op_07:          
+                ld c, 0
+        
+                _do
+
+                        call getPixelAddress
+                       
+                        ld a, (de)
+                        xor  (hl)
+                        ld (hl), a
+ 
+
+                        inc de
+                        inc c
+                        ld a, c
+op_06:                        
+                        cp 0
+                _while nz
+                inc b
+                ld a, b
+op_05:                        
+                cp  0
+        _while nz
+
+
+        pop de
+ 
+        ret   
 
 ; b: line from top
 ; c: byte from left
 drawBoneco:
+
+        call clear_boneco
+
         ld bc, (boneco_pos)
         ld a, b
         add 17
@@ -321,7 +370,15 @@ op_01:
         _while nz
 
 
- 
+        ld bc, (boneco_pos)
+        ld a,(boneco_pos)
+        ld (last_boneco_pos), a
+        ld a,(boneco_pos+1)
+        ld (last_boneco_pos+1), a
+
+        inc bc
+        ld (boneco_pos), bc
+        
  
         ret                   ; Return from the function
 
