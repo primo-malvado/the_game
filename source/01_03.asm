@@ -294,15 +294,17 @@ op_03:
 
                         call getPixelAddress
                        
-                        ld a, (hl)
-                        and (de)
-                        ;ld (hl), a
-
-                        ;inc de 
                         ld a, (de)
-                        ld (hl), a 
+                        and  (hl)
+                        ld (hl), a
+
+                        inc de 
+
+                        ld a, (de)
+                        or (hl)
+                        ld (hl), a
+
                         inc de
-                        
                         inc c
                         ld a, c
 op_00:                        
