@@ -1,29 +1,5 @@
 
-; Get screen address
-;  b = Y pixel position
-; Returns address in HL
-;
-Get_Pixel_Address:      
-        ld d, b
-        ld a,d          ; calculate y2,y1,y0
-        and %00000111   ; mask out unwanted bits
-        or %01000000    ; set base address of screen
-        ld h,a          ; store in h
-        ld a,d          ; calculate y7,y6
-        rra             ; shift to position
-        rra
-        rra
-        and %00011000   ; mask out unwanted bits
-        or h            ; or with y2,y1,y0
-        ld h,a          ; store in h
-        ld a,d          ; calculate y5,y4,y3
-        rla             ; shift to position
-        rla
-        and %11100000   ; mask out unwanted bits
-        ld l,a          ; store in l
-  
-        ret
-
+ 
 
 getPixelAddress:
     ld hl, row_memory

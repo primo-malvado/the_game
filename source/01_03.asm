@@ -40,26 +40,7 @@ start:
 
         xor a
 
-
-        ld sp, row_memory+191*2
-
-        ld b, 191
-
-
-        _do
-                dec b
-                call Get_Pixel_Address
-                push hl
-
-
-                xor a 
-                or b 
-        _while nz
- 
-
-        ld sp, Stack_Top
-
-
+        call init_lookup
 
 
  
@@ -145,6 +126,9 @@ start:
                                 ld (game_started), a
 
                                 halt
+
+
+    
                                 call clear_screen
 
 
@@ -191,6 +175,8 @@ start:
 
 
 
+
+
 Initialise_Interrupt:   
                 DI
                 LD A, $fe
@@ -225,6 +211,32 @@ walk:
         dw desenho_00
         dw desenho_02
  
+
+
+init_lookup:
+
+        ld de, row_memory
+
+        ld b, 191
+        ld hl, $4000
+
+        _do
+                ld a, l
+                ld (de), a
+
+                inc de 
+                ld a, h
+                ld (de), a
+
+                call nextLineDown
+
+                inc de 
+        _djnz
+ 
+
+        ret 
+
+
         include "bonecos.asm"
 desenho_03:
         db %00000000, %00000000
