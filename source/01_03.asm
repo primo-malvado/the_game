@@ -180,10 +180,11 @@ boneco_pos:
 
 
 clear_boneco
+        push hl
         push de
 
         ld bc, (last_boneco_pos)
-        ld de, desenho_mask
+        ld hl, desenho_mask
         ld a, b
         add 17
         ld(op_05+1), a
@@ -199,14 +200,14 @@ op_07:
         
                 _do
 
-                        call OLD_getPixelAddress
+                        call getPixelAddress
                        
-                        ld a, (de)
+                        ld a, (hl)
                         ;xor  (hl)
-                        ld (hl), a
+                        ld (de), a
  
 
-                        inc de
+                        inc hl
                         inc c
                         ld a, c
 op_06:                        
@@ -219,6 +220,7 @@ op_05:
         _while nz
 
 
+        pop hl
         pop de
  
         ret   
@@ -229,7 +231,7 @@ op_05:
 ; c: byte from left
 drawBoneco:
 
-        call clear_boneco
+       ; call clear_boneco
 
 
         ld ix, desenho_mask
