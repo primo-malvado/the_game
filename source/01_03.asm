@@ -199,7 +199,7 @@ op_07:
         
                 _do
 
-                        call getPixelAddress
+                        call OLD_getPixelAddress
                        
                         ld a, (de)
                         ;xor  (hl)
@@ -249,7 +249,7 @@ op_03:
         
                 _do
 
-                       call getPixelAddress
+                       call OLD_getPixelAddress
                        
                        push hl 
                        push de 
@@ -308,7 +308,7 @@ op_01:
 ; c: byte from left
 draw16x16:
         push bc
-        call getPixelAddress
+        call OLD_getPixelAddress
         ld b,8
 
         _do
