@@ -103,22 +103,22 @@ walk:
 
 init_lookup:
 
-        ld de, row_memory
+        ld hl, row_memory
 
         ld b, 191
-        ld hl, $4000
+        ld de, $4000
 
         _do
-                ld a, l
-                ld (de), a
+                ld a, e
+                ld (hl), a
 
-                inc de 
-                ld a, h
-                ld (de), a
+                inc hl 
+                ld a, d
+                ld (hl), a
 
                 call nextLineDown
 
-                inc de 
+                inc hl 
         _djnz
  
 
@@ -321,7 +321,7 @@ draw16x16:
                 ld (hl), a  
                 inc de   
 
-                call nextLineDown
+                call OLD_nextLineDown
                 
                 ld a, (de)
                 ld (hl), a 
@@ -333,7 +333,7 @@ draw16x16:
                 ld (hl), a  
                 inc de   
 
-                call nextLineDown
+                call OLD_nextLineDown
 
         _djnz
         pop bc
@@ -382,7 +382,7 @@ interrupt_handler:
         EI                                      ; Enable interrupts
         RET  
 
-        include '../source/sprite.asm'
+        ; include '../source/sprite.asm'
 
 
         org $fdfd
