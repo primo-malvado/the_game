@@ -361,30 +361,22 @@ op_03:
 
                         call getPixelAddress
                        
-
-                        push de 
-                        push hl
-                        pop hl 
-                        pop de
+ 
 
                         ld a, (de)
                         and  (hl)
-                        ld (de), a
+                        ld (hl), a
 
-                        inc hl 
+                        inc de 
 
-                        ld a, (hl)
-                        or (de)
-                        ld (de), a
+                        ld a, (de)
+                        or (hl)
+                        ld (hl), a
 
-                        inc hl
+                        inc de
                         inc c
                         ld a, c
-
-                        push de 
-                        push hl
-                        pop hl 
-                        pop de
+ 
 op_00:                        
                         cp 0
                 _while nz
