@@ -367,8 +367,8 @@ op_03:
                         pop hl 
                         pop de
 
-                        ld a, (hl)
-                        and  (de)
+                        ld a, (de)
+                        and  (hl)
                         ld (de), a
 
                         inc hl 
