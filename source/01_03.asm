@@ -335,6 +335,8 @@ op_05:
  
         ret   
 
+
+
 ; b: line from top
 ; c: byte from left
 drawBoneco:
@@ -359,19 +361,30 @@ op_03:
 
                         call getPixelAddress
                        
-                        ld a, (de)
-                        and  (hl)
-                        ld (hl), a
 
-                        inc de 
+                        push de 
+                        push hl
+                        pop hl 
+                        pop de
 
-                        ld a, (de)
-                        or (hl)
-                        ld (hl), a
+                        ld a, (hl)
+                        and  (de)
+                        ld (de), a
 
-                        inc de
+                        inc hl 
+
+                        ld a, (hl)
+                        or (de)
+                        ld (de), a
+
+                        inc hl
                         inc c
                         ld a, c
+
+                        push de 
+                        push hl
+                        pop hl 
+                        pop de
 op_00:                        
                         cp 0
                 _while nz
