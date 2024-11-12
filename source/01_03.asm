@@ -203,7 +203,6 @@ op_07:
                         call getPixelAddress
                        
                         ld a, (hl)
-                        ;xor  (hl)
                         ld (de), a
  
 
@@ -230,9 +229,9 @@ op_05:
 ; b: line from top
 ; c: byte from left
 drawBoneco:
-
-       ; call clear_boneco
-
+        push hl
+        call clear_boneco
+        pop hl
 
         ld ix, desenho_mask
         ld bc, (boneco_pos)
@@ -251,12 +250,9 @@ op_03:
         
                 _do
 
-                       call OLD_getPixelAddress
+                       call  getPixelAddress
                        
-                       push hl 
-                       push de 
-                       pop hl 
-                       pop de
+ 
 
                         
                         ld a, (de)
@@ -276,11 +272,7 @@ op_03:
                         inc hl
                         inc c
                         ld a, c
-
-                       push hl 
-                       push de 
-                       pop hl 
-                       pop de
+ 
 
  
 op_00:                        

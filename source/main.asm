@@ -5,6 +5,8 @@ main_loop:
     _if_not nz
     
             halt
+            halt
+            halt
 
             
             ld a, (loop_counter)
@@ -25,7 +27,7 @@ main_loop:
                         
                     ;call clear_screen
                     ld bc, $5f08
-                    ld de, desenho_00 
+                    ld hl, desenho_00 
                     call drawBoneco
             _else
                     cp 10
@@ -33,7 +35,7 @@ main_loop:
                         
                             ;call clear_screen
                             ld bc, $5f09
-                            ld de, desenho_01 
+                            ld hl, desenho_01 
                             call drawBoneco
 
                     _else
@@ -42,7 +44,7 @@ main_loop:
                                 
                                     ;call clear_screen
                                     ld bc, $5f0a
-                                    ld de, desenho_00 
+                                    ld hl, desenho_00 
                                     call drawBoneco
                             _else
                                     cp 0
@@ -50,7 +52,7 @@ main_loop:
                                     
                                             ;call clear_screen
                                             ld bc, $5f07
-                                            ld de, desenho_02 
+                                            ld hl, desenho_02 
                                             call drawBoneco
 
                                     _end_if
