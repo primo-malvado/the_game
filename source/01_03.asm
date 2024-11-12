@@ -302,32 +302,32 @@ op_01:
 ; c: byte from left
 draw16x16:
         push bc
-        call OLD_getPixelAddress
+        call getPixelAddress
         ld b,8
 
         _do
-                ld a, (de)
-                ld (hl), a 
-                inc de 
-                inc hl
+                ld a, (hl)
+                ld (de), a 
+                inc hl 
+                inc de
 
-                ld a, (de)
-                ld (hl), a  
-                inc de   
+                ld a, (hl)
+                ld (de), a  
+                inc hl   
 
-                call OLD_nextLineDown
+                call nextLineDown
                 
-                ld a, (de)
-                ld (hl), a 
-                inc de 
-                dec hl
+                ld a, (hl)
+                ld (de), a 
+                inc hl 
+                dec de
 
 
-                ld a, (de)
-                ld (hl), a  
-                inc de   
+                ld a, (hl)
+                ld (de), a  
+                inc hl   
 
-                call OLD_nextLineDown
+                call nextLineDown
 
         _djnz
         pop bc

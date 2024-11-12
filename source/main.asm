@@ -88,7 +88,7 @@ main_loop:
                                     _do
 
 
-                                            ld de, desenho_04 
+                                            ld hl, desenho_04 
                                             call draw16x16
 
 
