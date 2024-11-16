@@ -55,6 +55,14 @@ start:
 
         call clear_game_area
 
+        ld a, $00
+        ld (actual_level), a
+
+        call get_level_config
+        call copy_level_to_buffer
+        call draw_level
+
+
 
        ; jp main
         
@@ -63,11 +71,64 @@ start:
               ;  call clear_game_area
 
 
-                call main_loop
+                ;call main_loop
 
         _while_true
 
+get_level_config:
+        ld hl, level_00
+        ret
 
+; hl    level config 
+; level_buffer - 
+copy_level_to_buffer:
+
+        ld a, (hl)
+        ld (actual_player_position), a
+
+        inc hl
+        ld a, (hl)
+        ld (actual_player_position+1), a
+
+
+        inc hl; goal x
+        inc hl; goal y
+
+        ld de, level_buffer
+
+        inc hl
+
+        ld a, (hl)
+        cp $ff
+        _if_not z
+
+                _do
+                        
+                        ld (de), a
+
+                        inc de 
+
+                        inc hl
+                        ld a, (hl)
+
+                        ld (de), a
+                        inc de 
+                        ; copiar o block para o buffer
+
+                        inc hl
+                        ld a, (hl)
+                        cp $ff
+                _while nz
+        _end_if
+        inc hl
+
+        ret
+
+
+draw_level:
+
+
+        ret
 
 clear_game_area:
 
@@ -143,16 +204,28 @@ actual_level:
 actual_player_position:
         db $00, $00 ; x, y
 
+level_buffer:
+        db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+
 
 level_lookup:
         dw level_00
 
 level_00:
-        db $36; player position x=3, y=6
-        db $92; goal position x=9, y=2
-        db $81  ; posicao obstaculos
-        db $34
-        db $95
+        db $03, $06; player position x=3, y=6
+        db $09, $02; goal position x=9, y=2
+        db $08, $01  ; posicao obstaculos
+        db $03, $04
+        db $09, $05
+
         db $ff ; lim da lista de obstaculos
 
 
