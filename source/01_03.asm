@@ -193,7 +193,7 @@ draw_level:
                                 cp $01
                                 _if_not nz
                                         call getPixelAddress
-                                        ld hl, desenho_04
+                                        ld hl, coin_00
                                         call draw16x16
                                 _else
                                         cp $02
