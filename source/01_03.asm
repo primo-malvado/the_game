@@ -169,6 +169,52 @@ put_obstacle_in_buffer:
 draw_level:
 
         
+        ld de, level_buffer
+
+        ld b, 40
+        _do 
+
+                ld c, 1
+                _do
+
+                        ld a, (de)
+                        inc de
+
+                        cp 0
+                        _if_not z
+                                ; push bc
+                                push de
+                                ; push hl
+
+                                call getPixelAddress
+                                ld hl, obstacle_00 
+                                call draw16x16
+                                pop de
+                                ; pop hl
+                                ; pop bc
+
+                        _end_if
+
+                        inc c
+                        inc c
+
+                        ld a, c
+                        cp 25
+
+                _while nz
+
+
+                
+
+                ld a, b
+                add 16 
+                ld b, a
+                cp 184
+
+        _while nz
+
+
+
 
 
 
@@ -266,8 +312,14 @@ level_lookup:
 level_00:
         db $03, $06; player position x=3, y=6
         db $09, $02; goal position x=9, y=2
-        db $08, $01  ; posicao obstaculos
-        db $03, $04
+        
+        db $00, $00  ; posicao obstaculos
+        db $01, $01  ; posicao obstaculos
+        db $02, $02  ; posicao obstaculos
+        db $03, $03  ; posicao obstaculos
+
+        ; db $08, $01  ; posicao obstaculos
+        ; db $03, $04
         db $09, $05
 
         db $ff ; lim da lista de obstaculos
