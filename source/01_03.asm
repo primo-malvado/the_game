@@ -68,10 +68,6 @@ start:
         
         _do
 
-              ;  call clear_game_area
-
-
-                ;call main_loop
 
         _while_true
 
@@ -92,40 +88,88 @@ copy_level_to_buffer:
 
 
         inc hl; goal x
+        ld b, a 
         inc hl; goal y
+        ld c, a 
+        call put_goal_in_buffer
 
-        ld de, level_buffer
+        ;ld de, level_buffer
 
         inc hl
 
         ld a, (hl)
         cp $ff
-        _if_not z
+        ret z
 
-                _do
-                        
-                        ld (de), a
+        _do
 
-                        inc de 
+                ld b, a 
+                inc hl
+                ld a, (hl)
+                ld c, a
+                inc hl
 
-                        inc hl
-                        ld a, (hl)
+                call put_obstacle_in_buffer
 
-                        ld (de), a
-                        inc de 
-                        ; copiar o block para o buffer
 
-                        inc hl
-                        ld a, (hl)
-                        cp $ff
-                _while nz
-        _end_if
-        inc hl
+
+ 
+                push hl
+
+                
+
+
+
+
+                ld a, (hl)
+                cp $ff
+        _while nz
 
         ret
 
+put_goal_in_buffer:
+        push hl
+        ld a , b
+
+        ld b, c
+        _do
+                add 12
+        _djnz
+        
+        ld hl, level_buffer
+        ld d, 0
+        ld e, a
+        add hl, de
+
+        ld a, 1 
+        ld (hl), a
+
+        pop hl
+        ret
+put_obstacle_in_buffer:
+        push hl
+        ld a , b
+
+        ld b, c
+        _do
+                add 12
+        _djnz
+        
+        ld hl, level_buffer
+        ld d, 0
+        ld e, a
+        add hl, de
+
+        ld a, 2
+        ld (hl), a
+
+        pop hl
+        ret
 
 draw_level:
+
+        
+
 
 
         ret
