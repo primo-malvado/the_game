@@ -88,8 +88,10 @@ copy_level_to_buffer:
 
 
         inc hl; goal x
+        ld a, (hl)
         ld b, a 
         inc hl; goal y
+        ld a, (hl)
         ld c, a 
         call put_goal_in_buffer
 
@@ -182,13 +184,28 @@ draw_level:
 
                         cp 0
                         _if_not z
+
+
                                 ; push bc
                                 push de
                                 ; push hl
 
-                                call getPixelAddress
-                                ld hl, obstacle_00 
-                                call draw16x16
+                                cp $01
+                                _if_not nz
+                                        call getPixelAddress
+                                        ld hl, desenho_04
+                                        call draw16x16
+                                _else
+                                        cp $02
+                                        _if_not nz
+                                                call getPixelAddress
+                                                ld hl, obstacle_00  
+                                                call draw16x16
+                                        _end_if
+                                        
+                                
+                                _end_if
+
                                 pop de
                                 ; pop hl
                                 ; pop bc
@@ -312,15 +329,19 @@ level_lookup:
 level_00:
         db $03, $06; player position x=3, y=6
         db $09, $02; goal position x=9, y=2
+
+
         
-        db $00, $00  ; posicao obstaculos
-        db $01, $01  ; posicao obstaculos
-        db $02, $02  ; posicao obstaculos
-        db $03, $03  ; posicao obstaculos
+        db $08, $01  ; posicao obstaculos
+        db $03, $04
+        db $09, $05
+
+
+        ; db $01, $01  ; posicao obstaculos
+        ; db $02, $02  ; posicao obstaculos
+        ; db $03, $03  ; posicao obstaculos
 
         ; db $08, $01  ; posicao obstaculos
-        ; db $03, $04
-        db $09, $05
 
         db $ff ; lim da lista de obstaculos
 
