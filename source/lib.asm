@@ -5,33 +5,30 @@ getPixelAddress:
     ld de, row_memory
 
     ld a, e
-    add b
-    _if_not NC
-        inc d
-    _end_if
-    add b
-
-    _if_not NC
-        inc d
-    _end_if
+    add a, b
+    jr nc, no_carry
+    inc d
+no_carry:
+    add a, b
+    jr nc, no_carry2
+    inc d
+no_carry2:
     ld e, a
-
 
     push bc
-    ld a,(de)
-    ld c,a
+    ld a, (de)
+    ld c, a
     inc de
-    ld a,(de)
-    ld b,a
-    ld e,c
-    ld d,b	
+    ld a, (de)
+    ld b, a
+    ld e, c
+    ld d, b
     pop bc
 
-
     ld a, e
-    add c
+    add a, c
     ld e, a
-    
+
     ret
 
  
