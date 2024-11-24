@@ -1,7 +1,7 @@
 
 buffer_screen equ $f000
 
-
+map_width equ 120
  
 
 Stack_Top:              EQU $5dc0                             ; Stack at top of RAM
@@ -37,7 +37,7 @@ _mega_loop:
 						xor a
 						ld  (map_delta_y), a
 
-						ld bc, 80 
+						ld bc, map_width 
 						ld hl , (map_show)
 						add hl, bc
 						ld (map_show), hl
@@ -62,7 +62,7 @@ _mega_loop:
 						ld a, 3
 						ld  (map_delta_y), a
 
-						ld bc, 80 
+						ld bc, map_width
 						ld hl , (map_show)
 						sub hl, bc
 						ld (map_show), hl
@@ -161,7 +161,6 @@ cp3:
 cp_exit:
 
 
- 
 
 
 
@@ -187,30 +186,9 @@ cp_exit:
  
     
 				di
-
-                ;HALT 
-                ;HALT 
+ 
                 call copy_to_screen
-
-
-                ;ld a, $02
-                ;ld (drawTiles+1), a
-                ;ld a, $f0
-                ;ld (drawTiles+2), a
-
-                ;call drawTiles
-
-
-                ;call move_a_nibble
  
- 		        ;ei
-                ;HALT 
-                ;HALT 
- 
-				;di
-        
-                ;call copy_to_screen
-
 
 
         jp _mega_loop
@@ -222,11 +200,11 @@ drawTiles:
 
 
 
-        ld hl, $f003
+        ld hl, $f003 ; buffer
         EXX
-        LD DE, 50+96-80
+        LD DE, map_width-14
 
-        ld hl , (map_show)
+        ld hl , (map_show); mapposition
 
         ld c, $08
         ld (old_sp_operator+1), sp
@@ -237,7 +215,7 @@ draw_row:
 
         _do
 
-                ld a, (hl)
+                ld a, (hl); mapposition
                 exx 
 
                 ld c, $00
@@ -270,13 +248,13 @@ draw_row:
                 ld (hl), d
 
                 ld bc, $fe21
-                add hl, bc
+                add hl, bc ; buffer
                 exx
 
-                inc hl 
+                inc hl ; mapposition
         _djnz
 
-        add hl, de
+        add hl, de ; mapposition
         exx 
         ld bc, $01e4
         add hl , bc
@@ -300,16 +278,47 @@ copy_to_screen: ;8586
         ld c, $48
         ld hl, $401d 
         ld (operator_0001+1), hl
-        ld ix, $f011
+
+
+
+		ld a, (map_delta_y)
+		cp 0
+		_if_not nz
+
+        	ld ix, $f011
+
+		_end_if
+
+		cp 1
+		_if_not nz
+
+        	ld ix, $f011+4*32
+
+		_end_if
+		cp 2
+		_if_not nz
+
+        	ld ix, $f011+32*8
+
+		_end_if
+		cp 3
+		_if_not nz
+
+        	ld ix, $f011+32*12
+
+		_end_if
+
+
 
  
+        ld b, $40
         call function_85b5
+        ld b, $40-16
         ld c, $50
         ld hl, $481d
         ld (operator_0001+1), hl
 
 function_85b5:
-        ld b, $40
         ld (operator_0002+1), sp
         ld sp, ix
 
@@ -394,58 +403,14 @@ move_a_nibble:
 	LD   B,$80
 	_do
 		LD   A,(HL)
+
+                rept 26
+
 		INC  L
 		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
-		INC  L
-		RRD
+                endr
+
+ 
 		ADD  HL,DE
 	_djnz
 	RET 
