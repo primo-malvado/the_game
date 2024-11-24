@@ -1,0 +1,17 @@
+
+
+
+
+
+
+
+{
+  "name": "the_map_game",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "tiles.js",
+  "dependencies": {
+    "canvas": "^2.8.0",
+    "pixelmatch": "^5.2.1"
+  }
+}
