@@ -15,7 +15,7 @@ start:
         ld sp, Stack_Top
 
 
-		ld a, $07;
+		ld a, $47;
 		ld hl, $5800
 		ld (hl), a
 		ld de, $5801
@@ -128,7 +128,8 @@ _mega_loop:
 
 
 
-
+				ld a, $f0
+				ld (drawTiles+2), a
 				ld a, (map_delta_x)
 
 				cp 0
@@ -161,6 +162,12 @@ cp_exit:
 
 
  
+
+
+
+
+
+
 
          
  
