@@ -2,7 +2,7 @@ import { createCanvas, loadImage } from 'canvas';
 import fs from 'fs';
 
 const TILE_SIZE = 16; // Defina o tamanho do tile
-const imagePath = './Koholint Island.png'; // Defina o caminho da imagem
+const imagePath = './mapa.png'; // Defina o caminho da imagem
 //const imagePath = '/home/rcosta/Desktop/the_map_game/Koholint Island2.png'; // Defina o caminho da imagem
 
 let idx = 0;
@@ -22,10 +22,10 @@ async function splitImageIntoTiles() {
 
     let map = [];
 
-    for (let y = 0; y < image.height/4*3; y += TILE_SIZE) {
+    for (let y = 0; y < image.height; y += TILE_SIZE) {
 
         let rowData = [];
-        for (let x = 0; x < image.width/4*3; x += TILE_SIZE) {
+        for (let x = 0; x < image.width; x += TILE_SIZE) {
             const tileCanvas = createCanvas(TILE_SIZE, TILE_SIZE);
             const tileCtx = tileCanvas.getContext('2d');
             tileCtx.drawImage(canvas, x, y, TILE_SIZE, TILE_SIZE, 0, 0, TILE_SIZE, TILE_SIZE);
@@ -42,7 +42,7 @@ async function splitImageIntoTiles() {
                 const tilePath = `${tilesDir}/tile_${x}_${y}.png`;
                 fs.writeFileSync(tilePath, tileBuffer);
 
-                const altImagePath = '/home/rcosta/Desktop/the_map_game/Koholint Island.png';
+                const altImagePath = 'mapa.png';
                 const altImage = await loadImage(altImagePath);
                 const altCanvas = createCanvas(altImage.width, altImage.height);
                 const altCtx = altCanvas.getContext('2d');
@@ -64,7 +64,7 @@ async function splitImageIntoTiles() {
                     tileAsmData += `        db ${byteStr}\n`;
                 }
 
-                fs.appendFileSync('/home/rcosta/Desktop/the_map_game/tiles16.asm', tileAsmData);
+                fs.appendFileSync('./tiles16.asm', tileAsmData);
                 
             }else{
 

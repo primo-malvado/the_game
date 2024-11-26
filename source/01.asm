@@ -1,9 +1,18 @@
 
 buffer_screen equ $f000
 
-map_width equ 120
- 
-
+map_width equ 75
+ROM_CLS                 EQU  0x0DAF  
+ROM_PRINT               EQU  0x203C  
+INK                     EQU 0x10
+PAPER                   EQU 0x11
+FLASH                   EQU 0x12
+BRIGHT                  EQU 0x13
+INVERSE                 EQU 0x14
+OVER                    EQU 0x15
+AT                      EQU 0x16
+TAB                     EQU 0x17
+CR                      EQU 0x0C
 Stack_Top:              EQU $5dc0                             ; Stack at top of RAM
  
         org $5dc0
@@ -13,13 +22,21 @@ start:
 
         di
         ld sp, Stack_Top
+		CALL ROM_CLS            
 
-
-		ld a, $47;
+		ld bc, 32*24
+		ld a, %01000111
 		ld hl, $5800
-		ld (hl), a
 		ld de, $5801
+		ld (hl), a
 		ldir
+
+
+
+		LD DE, TEXT
+		CALL MY_PRINT
+ 
+ 
 
 _mega_loop:
                 
@@ -181,11 +198,11 @@ cp_exit:
 				_end_if
 
 
- 		        ei
-                HALT 
+ 		        ;ei
+                ;HALT 
  
     
-				di
+				;di
  
                 call copy_to_screen
  
@@ -416,10 +433,15 @@ move_a_nibble:
 	RET 
 
 
+MY_PRINT:               LD A, (DE)              ; Get the character
+                        CP 0                    ; CP with 0
+                        RET Z                   ; Ret if it is zero
+                        RST 0x10                ; Otherwise print the character
+                        INC DE                  ; Inc to the next character in the string
+                        JR MY_PRINT 
 
 
-
-
+TEXT:                   DB AT, 20, 2, INK, 1, PAPER, 6, BRIGHT, 1, "Tiago Monge, usa as teclas q, a, o e p para mover o mundo!", 0
 
 map_show: 
         dw map
