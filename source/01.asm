@@ -1,7 +1,7 @@
 
 buffer_screen equ $f000
 
-map_width equ 75
+map_width equ 60
 ROM_CLS                 EQU  0x0DAF  
 ROM_PRINT               EQU  0x203C  
 INK                     EQU 0x10
@@ -21,6 +21,13 @@ rom_01_start:
 start:
 
         di
+		ld a, 0
+		ld(23606), a
+		ld a, 249
+		ld(23607), a
+
+
+
         ld sp, Stack_Top
 		CALL ROM_CLS            
 
@@ -451,13 +458,16 @@ map_delta_x:
 map_delta_y:
 		db $00
 
-
-
+ 
         org $7000
 
         include "map.asm"
         org $aa00
         include "tiles16.asm"
+
+
+		org $fa00
+        include "font.asm"
 
 rom_01_end:
 
